@@ -1,0 +1,19 @@
+#!/bin/sh
+#SBATCH -N 1
+#SBATCH -J  SVR_TBOARD
+#SBATCH -t 04:00:00
+#SBATCH -o TENSORBOARD.out
+#SBATCH -e TB_STD_ERR.err
+#SBATCH --mem 4G
+
+source /home/aaung/.bash_profile #TODO: Your profile
+MODEL_DIR=/work/aaung/tensor_board/cifar #TODO: Your TF model directory
+
+ipnport=$(shuf -i8000-9999 -n1)
+echo ipnport=$ipnport
+
+ipnip=$(hostname -i)
+echo ipnip=$ipnip
+
+echo "ssh -N -L $ipnport:$ipnip:$ipnport $USER@$SLURM_SUBMIT_HOST.wpi.edu\n"
+tensorboard --logdir="${MODEL_DIR}" --port=$ipnport
